@@ -26,4 +26,4 @@ cd reddit-chatbot
 
 
 
-![CleanShot 2024-10-22 at 18 16 21@2x](https://github.com/user-attachments/assets/6e170c86-7b86-47c2-acb3-820113089337)
+
