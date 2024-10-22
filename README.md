@@ -24,6 +24,6 @@ A Flask application that interacts with Reddit and OpenAI to summarize posts and
 git clone https://github.com/Joaov41/reddit-chatbot.git
 cd reddit-chatbot
 
-
+Fill the config.py file with your Reddit and Open AI credentials
 
 
