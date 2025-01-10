@@ -27,7 +27,3 @@ cd reddit-chatbot
 Fill the config.py file with your Reddit and Open AI credentials
 
 
-![CleanShot 2025-01-10 at 15 45 00@2x](https://github.com/user-attachments/assets/287e9532-38e0-41c7-9825-8a0fb8245fd4)
-
-![CleanShot 2025-01-10 at 15 46 46@2x](https://github.com/user-attachments/assets/0b97a80c-af8c-454c-98ae-ed02d4a2dbe0)
-
