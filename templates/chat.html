@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reddit AI Chatbot</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --title-color: #ff3c00;
+      --button-primary: #ff3c00;
+      --button-secondary: #4479ff;
+      --chat-bg: #1e1e1e;
+      --chat-text: #ffffff;
+      --input-bg: #2b2b2b;
+      --input-text: #ffffff;
+      --placeholder-color: #999999;
+      --message-bg-dark: #2d2d2d;
+      --message-bg-light: #f8f8f8;
+      --modal-bg: #1e1e1e;
+      --modal-border: #444;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f0f0f0;
+      --text-color: #333333;
+      --chat-bg: #ffffff;
+      --chat-text: #333333;
+      --input-bg: #ffffff;
+      --input-text: #333333;
+      --placeholder-color: #666666;
+      --message-bg-dark: #f8f8f8;
+      --message-bg-light: #f8f8f8;
+      --modal-bg: #ffffff;
+      --modal-border: #dddddd;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.3s ease;
+      color: var(--text-color);
+    }
+
+    h1 {
+      color: var(--title-color);
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 20px 0;
+    }
+
+    #chat-window {
+      background: var(--chat-bg);
+      border: 1px solid #444;
+      border-radius: 4px;
+      height: 60vh;
+      margin: 20px auto;
+      padding: 20px;
+      overflow-y: auto;
+      max-width: 1200px;
+      color: var(--chat-text);
+    }
+
+    #input-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #user-input {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-size: 1rem;
+    }
+
+    #user-input::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #send-btn {
+      background-color: var(--button-primary);
+    }
+
+    #new-session-btn {
+      background-color: var(--button-primary);
+    }
+
+    #overview-btn {
+      background-color: var(--button-secondary);
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: var(--chat-text);
+    }
+
+    .message.bot {
+      background-color: var(--message-bg-dark);
+      padding: 15px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+    }
+
+    .message.user {
+      text-align: right;
+      color: var(--text-color);
+    }
+
+    .message.bot p {
+      margin: 0 0 1em 0;
+      line-height: 1.6;
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 15px;
+      background: var(--button-primary);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal {
+      background-color: var(--modal-bg);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--modal-border);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .modal-title {
+      color: var(--text-color);
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--modal-border);
+      border-radius: 4px;
+      background: var(--input-bg);
+      color: var(--input-text);
+      font-size: 1rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .modal-button.primary {
+      background-color: var(--button-primary);
+      color: white;
+    }
+
+    .modal-button.secondary {
+      background-color: transparent;
+      border: 1px solid var(--button-primary);
+      color: var(--text-color);
+    }
+
+    .loading-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 15px;
+      background-color: var(--message-bg-dark);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .loading-text {
+      color: var(--text-color);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      max-width: 300px;
+      height: 4px;
+      background-color: var(--modal-border);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 30%;
+      background-color: var(--button-primary);
+      border-radius: 2px;
+      animation: loading 1.5s infinite ease-in-out;
+    }
+
+    @keyframes loading {
+      0% {
+        left: -30%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="theme-toggle">Toggle Theme</button>
+  <h1>Reddit AI Chatbot</h1>
+  <div id="chat-window"></div>
+  <div id="input-container">
+    <input type="text" id="user-input" placeholder="Ask about Reddit...">
+    <div class="button-container">
+      <button id="send-btn">Send</button>
+      <button id="new-session-btn">Start New Session</button>
+      <button id="overview-btn">Subreddit Overview</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="subreddit-modal">
+    <div class="modal">
+      <h3 class="modal-title">Subreddit Overview Settings</h3>
+      <input type="text" class="modal-input" id="subreddit-name" placeholder="Enter subreddit name (without r/)">
+      <input type="number" class="modal-input" id="num-posts" value="20" placeholder="Number of posts to analyze">
+      <input type="text" class="modal-input" id="post-type" value="hot" placeholder="Post type (new/hot)">
+      <div class="modal-buttons">
+        <button class="modal-button secondary" id="cancel-modal">Cancel</button>
+        <button class="modal-button primary" id="confirm-modal">Analyze</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+    const newSessionBtn = document.getElementById("new-session-btn");
+    const overviewBtn = document.getElementById("overview-btn");
+    const themeToggle = document.getElementById("theme-toggle");
+
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', 'light');
+      }
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+
+    function formatResponse(text) {
+      let paragraphs = text.split(/\n\n+/);
+      return paragraphs.map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+    }
+
+    function displayMessage(text, sender) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", sender);
+      if (sender === "bot") {
+        msgDiv.innerHTML = formatResponse(text);
+      } else {
+        msgDiv.textContent = text;
+      }
+      chatWindow.appendChild(msgDiv);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function createLoadingMessage() {
+      const loadingDiv = document.createElement("div");
+      loadingDiv.classList.add("loading-message");
+      
+      const loadingText = document.createElement("p");
+      loadingText.classList.add("loading-text");
+      loadingText.textContent = "Analyzing subreddit content...";
+      
+      const progressBar = document.createElement("div");
+      progressBar.classList.add("progress-bar");
+      
+      loadingDiv.appendChild(loadingText);
+      loadingDiv.appendChild(progressBar);
+      
+      return loadingDiv;
+    }
+
+    function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+      displayMessage(message, "user");
+      userInput.value = "";
+
+      const loadingMessage = createLoadingMessage();
+      chatWindow.appendChild(loadingMessage);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+      })
+      .then(response => response.json())
+      .then(data => {
+        loadingMessage.remove();
+        if (data.response) {
+          displayMessage(data.response, "bot");
+        }
+      })
+      .catch(error => {
+        loadingMessage.remove();
+        displayMessage("Error: " + error.toString(), "bot");
+      });
+    }
+
+    function startNewSession() {
+      const loadingMessage = createLoadingMessage();
+      chatWindow.innerHTML = '';
+      chatWindow.appendChild(loadingMessage);
+
+      fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: "new session" })
+      })
+      .then(response => response.json())
+      .then(data => {
+        loadingMessage.remove();
+        displayMessage(data.response, "bot");
+      });
+    }
+
+    async function getSubredditOverview() {
+      const modal = document.getElementById('subreddit-modal');
+      const confirmBtn = document.getElementById('confirm-modal');
+      const cancelBtn = document.getElementById('cancel-modal');
+      const subredditInput = document.getElementById('subreddit-name');
+      const numPostsInput = document.getElementById('num-posts');
+      const postTypeInput = document.getElementById('post-type');
+
+      modal.style.display = 'flex';
+
+      return new Promise((resolve, reject) => {
+        const handleCancel = () => {
+          modal.style.display = 'none';
+          cleanup();
+          resolve(null);
+        };
+
+        const handleConfirm = () => {
+          const subreddit = subredditInput.value.trim();
+          const numPosts = parseInt(numPostsInput.value);
+          const postType = postTypeInput.value.trim().toLowerCase();
+
+          if (!subreddit || !numPosts || !postType) {
+            alert('Please fill in all fields');
+            return;
+          }
+
+          if (postType !== 'hot' && postType !== 'new') {
+            alert('Post type must be either "hot" or "new"');
+            return;
+          }
+
+          modal.style.display = 'none';
+          cleanup();
+          resolve({
+            subreddit,
+            numPosts,
+            postType
+          });
+        };
+
+        const handleKeydown = (event) => {
+          if (event.key === 'Escape') handleCancel();
+          if (event.key === 'Enter') handleConfirm();
+        };
+
+        const cleanup = () => {
+          confirmBtn.removeEventListener('click', handleConfirm);
+          cancelBtn.removeEventListener('click', handleCancel);
+          document.removeEventListener('keydown', handleKeydown);
+        };
+
+        confirmBtn.addEventListener('click', handleConfirm);
+        cancelBtn.addEventListener('click', handleCancel);
+        document.addEventListener('keydown', handleKeydown);
+      });
+    }
+
+    overviewBtn.addEventListener("click", async () => {
+      const result = await getSubredditOverview();
+      if (!result) return;
+
+      const loadingMessage = createLoadingMessage();
+      chatWindow.appendChild(loadingMessage);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      fetch("/subreddit_overview", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          subreddit: result.subreddit,
+          num_posts: result.numPosts,
+          post_type: result.postType
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        loadingMessage.remove();
+        displayMessage(data.response, "bot");
+      })
+      .catch(error => {
+        loadingMessage.remove();
+        displayMessage("Error: " + error.toString(), "bot");
+      });
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+    newSessionBtn.addEventListener("click", startNewSession);
+
+    userInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
