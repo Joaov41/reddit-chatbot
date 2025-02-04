@@ -31,6 +31,7 @@ Switched from OpenAI to Gemini 2.0 Flash - very fast, with a very big context, e
 - **PRAW:** Python Reddit API Wrapper.
 - **Gemini API:** For generating summaries using GPT models.
 - **Flask-Session:** Manage user sessions.
+- ** Implements LRU cache to avoid unnecessary repeated API calls.
 
 ## Setup and Installation
 
