@@ -23,6 +23,7 @@ A Flask application that interacts with Reddit and Gemini Flash to summarize pos
 
 
 Fixed a bug, where posts with with more than 200 comments would only extract up to 200 posts. Now the app extracts anad analyzes all comments, including all nested levels and the more comments api. It can handle ALL comments provided by the different Reddit api's.
+Switched from OpenAI to Gemini 2.0 Flash - very fast, with a very big context, essential for an app like this that handles huge amounts of text.
 
 ## Technologies Used
 
@@ -40,7 +41,7 @@ Fixed a bug, where posts with with more than 200 comments would only extract up 
 git clone https://github.com/Joaov41/reddit-chatbot.git
 cd reddit-chatbot
 pip install -r requirements.txt
-Fill the config.py file with your Reddit and Open AI credentials
+Fill the config.py file with your Reddit and Gemini API key credentials
 Run python.py
 
 
