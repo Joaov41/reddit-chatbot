@@ -22,6 +22,7 @@ A Flask application that interacts with Reddit and Gemini Flash to summarize pos
 ![CleanShot 2025-01-24 at 20 04 48@2x](https://github.com/user-attachments/assets/e84d67e6-0639-4147-9993-8897b3005939)
 
 
+Fixed a bug, where posts with with more than 200 comments would only extract up to 200 posts. Now the app extracts anad analyzes all comments, including all nested levels and the more comments api. It can handle ALL comments provided by the different Reddit api's.
 
 ## Technologies Used
 
