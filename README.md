@@ -35,15 +35,61 @@ Switched from OpenAI to Gemini 2.0 Flash - very fast, with a very big context, e
 
 ## Setup and Installation
 
-
 ### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Joaov41/reddit-chatbot.git
 cd reddit-chatbot
+```
+
+### 2. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-Fill the config.py file with your Reddit and Gemini API key credentials
-Run python.py
+```
 
+### 3. Configure Environment Variables
 
+Create a `.env` file from the example:
+```bash
+cp .env.example .env
+```
 
+Edit `.env` and add your API credentials:
+- Reddit Client ID and Secret (get from https://www.reddit.com/prefs/apps)
+- Gemini API Key (get from https://makersuite.google.com/app/apikey)
+
+### 4. Run the Application
+
+```bash
+python app.py
+```
+
+## Recent Improvements (v2.0)
+
+The codebase has been significantly improved with:
+
+### Security Enhancements
+- API credentials now stored in environment variables (not hardcoded)
+- Input validation and sanitization for all user inputs
+- Rate limiting to prevent API abuse
+- Secure session management
+
+### Performance Optimizations
+- Thread-safe LRU cache with TTL (time-to-live) support
+- Concurrent API calls for fetching multiple posts
+- Optimized memory usage
+
+### Code Quality
+- Modular architecture with separate services, models, and utilities
+- Type hints for better IDE support
+- Comprehensive error handling with specific exceptions
+- Clean separation of concerns
+
+### New Features
+- Health check endpoint (`/health`)
+- Better error messages with proper HTTP status codes
+- Enhanced caching strategy
+- Configurable rate limits
+
+For users upgrading from v1.0, please see the [Migration Guide](MIGRATION_GUIDE.md).
