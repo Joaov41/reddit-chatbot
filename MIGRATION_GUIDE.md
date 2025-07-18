@@ -1,6 +1,6 @@
 # Migration Guide: Upgrading to the Improved Reddit Chatbot
 
-This guide will help you migrate from the original `app.py` to the improved version with better security, performance, and code organization.
+This guide will help you migrate from an older version of the Reddit Chatbot to the latest version with better security, performance, and code organization.
 
 ## Key Improvements
 
@@ -75,11 +75,17 @@ docker run -d -p 6379:6379 redis:alpine
 
 ### 4. Update Your Code
 
-Replace `app.py` with `app_improved.py`:
+Pull the latest changes from the repository:
 
 ```bash
-mv app.py app_old.py
-mv app_improved.py app.py
+git pull origin main
+```
+
+Note: If you have local modifications to the old `app.py`, you may want to back them up first:
+
+```bash
+mv app.py app_old_backup.py
+git pull origin main
 ```
 
 ### 5. Update Import Statements
@@ -168,17 +174,23 @@ Ensure all new directories (`models/`, `services/`, `utils/`) are in your Python
 
 ## Rollback Plan
 
-If you need to rollback:
+If you need to rollback to an older version:
 
-1. Restore the original `app.py`:
+1. If you backed up your old `app.py`:
    ```bash
-   mv app.py app_improved.py
-   mv app_old.py app.py
+   mv app_old_backup.py app.py
    ```
 
-2. Update `config.py` to remove environment variable loading
+2. Restore the old `config.py`:
+   ```bash
+   git checkout <previous-commit-hash> -- config.py
+   ```
 
-3. Reinstall original dependencies
+3. Remove new directories and dependencies:
+   ```bash
+   rm -rf models/ services/ utils/
+   pip uninstall -r requirements.txt
+   ```
 
 ## Additional Features
 
