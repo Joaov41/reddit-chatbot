@@ -1,5 +1,7 @@
 # Reddit Flask Chatbot
 
+> **Version Notice:** This repository contains both v1.0 (in `main` branch) and v2.0 (in `reddit-chatbot-improvements` branch). See installation instructions below for accessing v2.0.
+
 A Flask application that interacts with Reddit and Gemini Flash to summarize posts and comments. Users can fetch the latest, hot, or top posts from a subreddit and getsummaries.
 
 
@@ -37,9 +39,17 @@ Switched from OpenAI to Gemini 2.0 Flash - very fast, with a very big context, e
 
 ### 1. Clone the Repository
 
+For the latest stable version (v1.0):
 ```bash
 git clone https://github.com/Joaov41/reddit-chatbot.git
 cd reddit-chatbot
+```
+
+For the improved v2.0 (currently in pull request):
+```bash
+git clone https://github.com/Joaov41/reddit-chatbot.git
+cd reddit-chatbot
+git checkout reddit-chatbot-improvements
 ```
 
 ### 2. Install Dependencies
@@ -72,6 +82,8 @@ python app_improved.py
 ```
 
 ## Recent Improvements (v2.0)
+
+> **Note:** v2.0 is currently available in the `reddit-chatbot-improvements` branch (see clone instructions above). Once the pull request is merged, it will be available in the main branch.
 
 The codebase has been significantly improved with:
 
