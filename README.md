@@ -61,8 +61,14 @@ Edit `.env` and add your API credentials:
 
 ### 4. Run the Application
 
+For the original version:
 ```bash
 python app.py
+```
+
+For the improved v2.0 (recommended):
+```bash
+python app_improved.py
 ```
 
 ## Recent Improvements (v2.0)
@@ -91,5 +97,7 @@ The codebase has been significantly improved with:
 - Better error messages with proper HTTP status codes
 - Enhanced caching strategy
 - Configurable rate limits
+
+**Note:** The v2.0 improvements are implemented in `app_improved.py`. The original `app.py` remains unchanged for backward compatibility.
 
 For users upgrading from v1.0, please see the [Migration Guide](MIGRATION_GUIDE.md).
